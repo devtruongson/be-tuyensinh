@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            UngTuyen.belongsTo(models.Allcode, { foreignKey: 'status', targetKey: 'keyMap', as: 'statusData' });
+            UngTuyen.belongsTo(models.Allcode, { foreignKey: 'keHoach', targetKey: 'keyMap', as: 'keHoachData' });
         }
     }
     UngTuyen.init(

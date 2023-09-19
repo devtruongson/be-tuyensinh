@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Blog.belongsTo(models.Allcode, { foreignKey: 'type', targetKey: 'keyMap', as: 'typeData' });
         }
     }
     Blog.init(
