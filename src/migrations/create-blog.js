@@ -1,4 +1,7 @@
 'use strict';
+
+const { STRING } = require('sequelize');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
@@ -25,9 +28,12 @@ module.exports = {
                 type: Sequelize.TEXT('long'),
             },
             slug: {
-                type: Sequelize.TEXT('long'),
+                type: STRING,
                 unique: true,
                 allowNull: false,
+            },
+            type: {
+                type: STRING,
             },
             createdAt: {
                 allowNull: false,

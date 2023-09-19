@@ -17,6 +17,10 @@ const uploadFile = multer({ storage: storageFile });
 
 function appRouter(app) {
     route.get('/get-all-blogs', appController.GetAllBlogs);
+    route.get('/get-blog-by-type', appController.GetBlogByType);
+    route.get('/get-blog-by-slug', appController.GetBlogBySlug);
+    route.post('/create-blog', appController.CreateBlog);
+    route.put('/update-blog', appController.UpdateBlog);
 
     app.use('/api/v1', route);
 }
