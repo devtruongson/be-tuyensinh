@@ -148,11 +148,7 @@ class appService {
                     });
                 }
 
-                let newSlug = slug(data.title) + uuidv4();
-
-                if (data.type == 'B6' || data.type == 'B5') {
-                    newSlug = data.slug;
-                }
+                let newSlug = data.slug;
 
                 const blogUpdated = await db.Blog.update(
                     {
