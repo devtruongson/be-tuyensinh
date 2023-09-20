@@ -1,10 +1,11 @@
 const route = require('express').Router();
 const multer = require('multer');
 const appController = require('../controllers/appController');
+const path = require('path');
 
 const storageFile = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join('./src/', 'public/images'));
+        cb(null, path.join('./src/', 'public/files'));
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -33,7 +34,7 @@ function appRouter(app) {
 
     // ung Tuyen
     route.post('/ung-tuyen-ung-vien', appController.UngTuyenUngVien);
-    route.post('/get-all-ho-so-ung-tuyen', appController.GetAllHoSoUngTuyen);
+    route.get('/get-all-ho-so-ung-tuyen', appController.GetAllHoSoUngTuyen);
     route.put('/update-status-ho-so', appController.UpdateStatusHoSoUngTuyen);
     route.get('/get-all-ho-so-filter', appController.GetAllHoSoFilter);
     route.get('/tra-cuu-thong-tin', appController.TraCuuThongTin);

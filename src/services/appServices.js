@@ -11,7 +11,14 @@ class appService {
     GetAllBlogs() {
         return new Promise(async (resolve, reject) => {
             try {
-                const data = await db.Blog.findAll();
+                const data = await db.Blog.findAll({
+                    include: [
+                        {
+                            model: db.Allcode,
+                            as: 'typeData',
+                        },
+                    ],
+                });
 
                 resolve({
                     errCode: 0,
@@ -140,6 +147,13 @@ class appService {
                         msg: 'missing required parameters',
                     });
                 }
+
+                let newSlug = slug(data.title) + uuidv4();
+
+                if (data.type == 'B6' || data.type == 'B5') {
+                    newSlug = data.slug;
+                }
+
                 const blogUpdated = await db.Blog.update(
                     {
                         title: data.title,
@@ -149,7 +163,7 @@ class appService {
                         file: data.file,
                         contentHTML: data.contentHTML,
                         contentMarkdown: data.contentMarkdown,
-                        slug: slug(data.title) + uuidv4(),
+                        slug: newSlug,
                     },
                     {
                         where: {
@@ -199,6 +213,8 @@ class appService {
                         msg: 'missing required parameters',
                     });
                 }
+
+                console.log(data);
 
                 const user = await db.User.findOne({
                     where: {
@@ -331,10 +347,18 @@ class appService {
         });
     }
 
+    /* page , pageSize : phát triển tính năng phân trang  */
     GetAllHoSoUngTuyen(page = 1, pageSize = 10) {
         return new Promise(async (resolve, reject) => {
             try {
-                const { data, totalPage } = findAndPaginate(db.UngTuyen, page, pageSize, {});
+                const { data, totalPage } = await findAndPaginate(db.UngTuyen, page, pageSize, {
+                    include: [
+                        {
+                            model: db.Allcode,
+                            as: 'keHoachData',
+                        },
+                    ],
+                });
 
                 resolve({
                     errCode: 0,
@@ -353,6 +377,7 @@ class appService {
         });
     }
 
+    /* page , pageSize : phát triển tính năng phân trang  */
     GetAllHoSoFilter(page = 1, pageSize = 10, xt) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -363,10 +388,16 @@ class appService {
                     });
                 }
 
-                const { data, totalPage } = findAndPaginate(db.UngTuyen, page, pageSize, {
+                const { data, totalPage } = await findAndPaginate(db.UngTuyen, page, pageSize, {
                     where: {
                         keHoach: xt,
                     },
+                    include: [
+                        {
+                            model: db.Allcode,
+                            as: 'keHoachData',
+                        },
+                    ],
                 });
 
                 resolve({
@@ -433,6 +464,16 @@ class appService {
                     where: {
                         cccd: cccd,
                     },
+                    include: [
+                        {
+                            model: db.Allcode,
+                            as: 'statusData',
+                        },
+                        {
+                            model: db.Allcode,
+                            as: 'keHoachData',
+                        },
+                    ],
                 });
 
                 if (!hoSo) {
@@ -467,13 +508,13 @@ class appService {
                 let data;
 
                 if (status === 'null') {
-                    data = await db.Code.findAll({
+                    data = await db.Allcode.findAll({
                         where: {
                             type: type,
                         },
                     });
                 } else {
-                    data = await db.Code.findAll({
+                    data = await db.Allcode.findAll({
                         where: {
                             type: type,
                             status: status,
